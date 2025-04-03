@@ -1,0 +1,100 @@
+go mod init google_battery_historian/analyzer
+go mod tidy
+
+https://github.com/google/closure-library.git
+https://github.com/google/closure-compiler.git
+
+
+https://github.com/google/closure-compiler/archive/refs/tags/v20170409.zip
+mvn -DskipTests -pl externs/pom.xml,pom-main.xml,pom-main-shaded.xml
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary for Closure Compiler Externs 1.0-SNAPSHOT:
+[INFO] 
+[INFO] Closure Compiler Externs ........................... SUCCESS [04:18 min]
+[INFO] Closure Compiler Main .............................. SUCCESS [07:07 min]
+[INFO] Closure Compiler ................................... SUCCESS [01:30 min]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  17:24 min
+[INFO] Finished at: 2024-05-06T13:43:09+08:00
+[INFO] ------------------------------------------------------------------------
+
+cp third_party/closure-compiler/target/closure-compiler-1.0-SNAPSHOT.jar  third_party/closure-compiler/
+go fmt setup.go && go build -o setup setup.go && ./setup
+
+go run cmd/battery-historian/battery-historian.go
+go build -o battery_historian  cmd/battery-historian/battery-historian.go 
+android@Church:/data/ro/output/google_battery_historian$ ./battery_historian
+
+
+
+https://github.com/bazelbuild/bazelisk/releases
+bazelisk build //:compiler_unshaded_deploy.jar
+cd third_party/closure-compiler-20220719
+/home/android/Documents/bazelisk-linux-amd64 build //:compiler_unshaded_deploy.jar
+~/Documents/google_battery_historian/bazelisk-linux-amd64 build //:compiler_unshaded_deploy.jar
+
+
+################################################################
+Starting local Bazel server and connecting to it...
+WARNING: Download from http://bazel-mirror.storage.googleapis.com/repo1.maven.org/maven2/com/google/guava/failureaccess/1.0.1/failureaccess-1.0.1.jar failed: class java.io.FileNotFoundException GET returned 404 Not Found
+WARNING: Download from http://bazel-mirror.storage.googleapis.com/repo1.maven.org/maven2/com/google/re2j/re2j/1.3/re2j-1.3.jar failed: class java.io.FileNotFoundException GET returned 404 Not Found
+WARNING: Download from http://bazel-mirror.storage.googleapis.com/repo1.maven.org/maven2/org/apache/ant/ant/1.10.11/ant-1.10.11.jar failed: class java.io.FileNotFoundException GET returned 404 Not Found
+WARNING: Download from http://bazel-mirror.storage.googleapis.com/repo1.maven.org/maven2/com/google/guava/guava/31.0.1-jre/guava-31.0.1-jre.jar failed: class java.io.FileNotFoundException GET returned 404 Not Found
+WARNING: Download from http://bazel-mirror.storage.googleapis.com/repo1.maven.org/maven2/com/google/errorprone/error_prone_annotations/2.3.2/error_prone_annotations-2.3.2.jar failed: class java.io.FileNotFoundException GET returned 404 Not Found
+WARNING: Download from http://bazel-mirror.storage.googleapis.com/repo1.maven.org/maven2/com/google/guava/guava-beta-checker/1.0/guava-beta-checker-1.0.jar failed: class java.io.FileNotFoundException GET returned 404 Not Found
+WARNING: Download from http://bazel-mirror.storage.googleapis.com/repo1.maven.org/maven2/com/google/auto/service/auto-service-annotations/1.0/auto-service-annotations-1.0.jar failed: class java.io.FileNotFoundException GET returned 404 Not Found
+WARNING: Download from http://bazel-mirror.storage.googleapis.com/repo1.maven.org/maven2/com/google/auto/service/auto-service/1.0/auto-service-1.0.jar failed: class java.io.FileNotFoundException GET returned 404 Not Found
+WARNING: Download from http://bazel-mirror.storage.googleapis.com/repo1.maven.org/maven2/com/google/auto/auto-common/1.1.2/auto-common-1.1.2.jar failed: class java.io.FileNotFoundException GET returned 404 Not Found
+INFO: Analyzed target //:compiler_unshaded_deploy.jar (88 packages loaded, 2683 targets configured).
+INFO: Found 1 target...
+Target //:compiler_unshaded_deploy.jar up-to-date:
+  bazel-bin/compiler_unshaded_deploy.jar
+INFO: Elapsed time: 319.473s, Critical Path: 29.54s
+INFO: 506 processes: 40 internal, 449 local, 17 worker.
+################################################################
+
+################################################################
+~/Documents/google_battery_historian/bazelisk-linux-amd64 build :all
+INFO: Analyzed 439 targets (41 packages loaded, 1108 targets configured).
+INFO: Found 439 targets...
+INFO: Elapsed time: 73.663s, Critical Path: 20.38s
+INFO: 1721 processes: 1264 internal, 33 local, 424 worker.
+INFO: Build completed successfully, 1721 total actions
+################################################################
+
+################################################################
+cts@cts:~/Documents/google_battery_historian$ java -version 
+openjdk version "11.0.1" 2018-10-16
+OpenJDK Runtime Environment 18.9 (build 11.0.1+13)
+OpenJDK 64-Bit Server VM 18.9 (build 11.0.1+13, mixed mode)
+################################################################
+
+grep -r  "Legend"  -n *  --exclude-dir=third_party/  --exclude-dir=compiled/  --exclude-dir=js_backup
+
+/home/cts/Downloads/go1.22.3.linux-amd64/go/bin/go fmt setup.go; /home/cts/Downloads/go1.22.3.linux-amd64/go/bin/go  build -o setup setup.go ; ./setup
+
+
+Using --dependency_mode to Drop Unreferenced Files
+This flag replaces the now deprecated --only_closure_dependencies and --manage_closure_dependencies flags
+
+
+/home/cts/Downloads/go1.22.3.linux-amd64/go/bin/go run cmd/battery-historian/battery-historian.go
+
+
+
+historian.appstats.initialize
+
+
+~/Documents/google_battery_historian/third_party/closure-library
+master
+commit 38ebe9c405eb8264c987129c0485272bdb6167d4 (HEAD -> master)
+Merge: 50eca8f96 f8922751c
+Author: Laura Harker <lharker@google.com>
+Date:   Tue Sep 10 17:16:38 2019 -0700
+
+    Merge pull request #987 from google/npm-v20190909.0.0
+    
+    New npm release at v20190909.0.0
+

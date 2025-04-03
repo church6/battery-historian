@@ -1217,6 +1217,7 @@ historian.appstats.initialize = function(stats) {
   // Convert appStats to a map with app.uid as key.
   var appStats = {};
   var appOptions = [];
+  if (stats != null) { /*add by church*/
   for (var i = 0; i < stats.length; i++) {
     // Parsed apps all have UIDs.
     var uid = /** @type {number} */(stats[i].RawStats.uid);
@@ -1227,6 +1228,7 @@ historian.appstats.initialize = function(stats) {
           .val(uid.toString())
           .html(stats[i].RawStats.name + ' (Uid: ' + uid + ')')
     });
+  }
   }
   historian.appstats.appStats = appStats;
   historian.appstats.appOptions = appOptions;

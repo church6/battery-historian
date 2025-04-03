@@ -487,7 +487,7 @@ historian.constructTimeline_ = function(timeline, data, levelSummaryData,
       timeline.barOrder, timeline.showReportTaken, defaultXExtent);
 };
 
-
+function drawChart() {/* deprecated by church */};
 /**
  * Loads and displays Historian V1.
  */

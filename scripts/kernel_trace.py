@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python2
 """Historian script for converting the timestamps in kernel trace to UTC.
 
  TO USE:

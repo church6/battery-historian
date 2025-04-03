@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python2
 """Legacy Historian script for analyzing Android bug reports."""
 
 # Copyright 2016 Google Inc. All rights reserved.
@@ -1433,7 +1433,7 @@ def main():
 
   if not getopt_generate_chart_only:
     print """
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+      <script src="jquery.min_1.11.1.js"></script>
       <script type="text/javascript" src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1','packages':['timeline']}]}"></script>
     """
 

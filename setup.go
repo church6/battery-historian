@@ -34,8 +34,10 @@ import (
 const (
 	closureCompilerVersion = "20170409"
 	closureCompilerZip     = "compiler-" + closureCompilerVersion + ".zip"
-	closureCompilerJar     = "closure-compiler-v" + closureCompilerVersion + ".jar"
-	closureCompilerURL     = "http://dl.google.com/closure-compiler/" + closureCompilerZip
+	// closureCompilerJar     = "closure-compiler-v" + closureCompilerVersion + ".jar"
+	// closureCompilerJar = "closure-compiler-1.0-SNAPSHOT.jar"
+	closureCompilerJar = "closure-compiler-v20170409.jar"
+	closureCompilerURL = "http://dl.google.com/closure-compiler/" + closureCompilerZip
 
 	thirdPartyDir = "third_party"
 	compiledDir   = "compiled"
@@ -45,6 +47,9 @@ var rebuild = flag.Bool("rebuild", false, "Whether or not clear all setup files 
 
 // runCommand runs the given command and only prints the output or error if they're not empty.
 func runCommand(name string, args ...string) {
+	fmt.Println(name)
+	fmt.Println(args)
+	// return
 	out, err := historianutils.RunCommand(name, args...)
 	if err != nil {
 		fmt.Println(err)
@@ -83,33 +88,7 @@ func deletePath(path string) error {
 	return os.RemoveAll(path)
 }
 
-func main() {
-	flag.Parse()
-
-	if *rebuild {
-		fmt.Println("\nClearing files...")
-		if err := deletePath(thirdPartyDir); err != nil {
-			fmt.Printf("Failed to delete %s directory: %v\n", thirdPartyDir, err)
-			return
-		}
-		if err := deletePath(compiledDir); err != nil {
-			fmt.Printf("Failed to delete %s directory: %v\n", compiledDir, err)
-			return
-		}
-	}
-
-	os.Mkdir(thirdPartyDir, 0777)
-	os.Mkdir(compiledDir, 0777)
-
-	wd, err := os.Getwd()
-	if err != nil {
-		fmt.Printf("Unable to get working directory: %v\n", err)
-		return
-	}
-	closureLibraryDir := path.Join(wd, thirdPartyDir, "closure-library")
-	closureCompilerDir := path.Join(wd, thirdPartyDir, "closure-compiler")
-	axisDir := path.Join(thirdPartyDir, "flot-axislabels")
-
+func download(closureLibraryDir string, closureCompilerDir string) {
 	if _, err := os.Stat(closureLibraryDir); os.IsNotExist(err) {
 		fmt.Println("\nDownloading Closure library...")
 		runCommand("git", "clone", "https://github.com/google/closure-library", closureLibraryDir)
@@ -158,6 +137,43 @@ func main() {
 			}
 		}
 	}
+}
+
+func clean(rebuild bool) {
+	if rebuild {
+		fmt.Println("\nClearing files...")
+		if err := deletePath(thirdPartyDir); err != nil {
+			fmt.Printf("Failed to delete %s directory: %v\n", thirdPartyDir, err)
+			return
+		}
+		if err := deletePath(compiledDir); err != nil {
+			fmt.Printf("Failed to delete %s directory: %v\n", compiledDir, err)
+			return
+		}
+	}
+}
+
+func main() {
+	flag.Parse()
+
+	// clean(*rebuild)
+
+	os.Mkdir(thirdPartyDir, 0777)
+	os.Mkdir(compiledDir, 0777)
+
+	wd, err := os.Getwd()
+	if err != nil {
+		fmt.Printf("Unable to get working directory: %v\n", err)
+		return
+	}
+	closureLibraryDir := path.Join(wd, thirdPartyDir, "closure-library")
+	closureCompilerDir := path.Join(wd, thirdPartyDir, "closure-compiler")
+	//  closureCompilerDir := path.Join(wd, thirdPartyDir, "closure-compiler-20220719")
+	axisDir := path.Join(thirdPartyDir, "flot-axislabels")
+	if *rebuild {
+		// download(closureLibraryDir, closureCompilerDir)
+		fmt.Println("rebuild")
+	}
 
 	if _, err := os.Stat(axisDir); os.IsNotExist(err) {
 		fmt.Println("\nDownloading 3rd-party JS files...")
@@ -181,14 +197,20 @@ func main() {
 	fmt.Println("\nGenerating optimized JS runfiles...")
 	runCommand("java", "-jar",
 		path.Join(closureCompilerDir, closureCompilerJar),
+		// "--language_in", "ECMASCRIPT6_TYPED",
+		"--language_in", "ECMASCRIPT6",
 		"--closure_entry_point", "historian.upload",
+		// "--entry_point", "historian.upload",
 		"--js", "js/*.js",
 		"--js", path.Join(closureLibraryDir, "closure/goog/base.js"),
 		"--js", path.Join(closureLibraryDir, "closure/goog/**/*.js"),
 		"--only_closure_dependencies",
+		// "--dependency_mode", "PRUNE",
 		"--generate_exports",
 		"--js_output_file", path.Join(wd, compiledDir, "historian-optimized.js"),
 		"--output_manifest", path.Join(wd, compiledDir, "manifest.MF"),
 		"--compilation_level", "SIMPLE_OPTIMIZATIONS",
+		// "--compilation_level", "SIMPLE",
+		// "--warning_level", "VERBOSE",
 	)
 }
